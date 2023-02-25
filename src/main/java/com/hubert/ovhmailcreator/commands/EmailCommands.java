@@ -59,9 +59,11 @@ public class EmailCommands {
         return "Written into " + pathname;
     }
 
-    @ShellMethod(key = "test")
-    public void test() {
+    @ShellMethod(key = "get-emails", value = "Get emails")
+    public void getEmails(
+            @ShellOption(help = "OVH domain", value = "--domain") String domain
+    ) {
         OvhWrapper ovhWrapper = new OvhWrapper(ovhConfiguration);
-        ovhWrapper.getEmails("inotomia.pl");
+        ovhWrapper.getEmails(domain);
     }
 }
