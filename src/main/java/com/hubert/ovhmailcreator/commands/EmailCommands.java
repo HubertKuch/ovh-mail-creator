@@ -15,7 +15,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,5 +67,13 @@ public class EmailCommands {
         return ovhWrapper.getEmails(domain);
     }
 
+    @ShellMethod(key = "delete-emails", value = "Delete emails from domain")
+    public void deleteAll(
+            @ShellOption(help = "OVH domain", value = "--domain") String domain
+    ) {
+        OvhWrapper ovhWrapper = new OvhWrapper(ovhConfiguration);
+
+        ovhWrapper.deleteEmails(domain);
+    }
 
 }
