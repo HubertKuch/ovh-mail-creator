@@ -1,6 +1,7 @@
 package com.hubert.ovhmailcreator.ovh;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hubert.ovhmailcreator.configuration.OvhConfiguration;
 import com.hubert.ovhmailcreator.external.OvhApi;
@@ -9,6 +10,8 @@ import com.hubert.ovhmailcreator.models.CreateEmailCredentials;
 import com.hubert.ovhmailcreator.models.EmailCreatedResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,7 +42,7 @@ public class OvhWrapper {
         }
     }
 
-    public void getEmails(String domain) {
+    public List<String> getEmails(String domain) {
         OvhApi ovhApi = new OvhApi(ovhConfiguration.getEndpoint(),
                                    ovhConfiguration.getAppKey(),
                                    ovhConfiguration.getAppSecret(),
@@ -47,14 +50,12 @@ public class OvhWrapper {
         );
 
         String url = "/email/domain/%s/account".formatted(domain);
-        String json = null;
         try {
-            json = ovhApi.get(url);
-        } catch (OvhApiException e) {
+            String json = ovhApi.get(url);
+
+            return objectMapper.readValue(json, new TypeReference<List<String>>(){});
+        } catch (OvhApiException | JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(json);
-
-//            return objectMapper.reader().readValue(json);
     }
 }

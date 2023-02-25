@@ -60,10 +60,13 @@ public class EmailCommands {
     }
 
     @ShellMethod(key = "get-emails", value = "Get emails")
-    public void getEmails(
+    public List<String> getEmails(
             @ShellOption(help = "OVH domain", value = "--domain") String domain
     ) {
         OvhWrapper ovhWrapper = new OvhWrapper(ovhConfiguration);
-        ovhWrapper.getEmails(domain);
+
+        return ovhWrapper.getEmails(domain);
     }
+
+
 }

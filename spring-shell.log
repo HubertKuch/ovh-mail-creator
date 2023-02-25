@@ -26,3 +26,5 @@
 1677321753806:create-email --count 1 --base ratysh --password Testspsda2341 --domain inotomia.pl
 1677321981561://
 1677321986953:create-email --count 1 --base ratysh --password Testspsda2341 --domain inotomia.pl
+1677322181681:get-emails --domain inotomia.pl
+1677322189939:stacktrace
