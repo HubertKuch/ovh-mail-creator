@@ -23,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmailCommands {
     private final OvhConfiguration ovhConfiguration;
-// create-email --count 1 --base ratysh --password Testspsda2341 --domain inotomia.pl
+
     @ShellMethod(key = "create-email", value = "Create emails")
     public String createEmail(
             @ShellOption(help = "OVH domain", value = "--domain") String domain,

@@ -62,6 +62,7 @@
     </dependencyManagement>
 
     <build>
+        <finalName>ovh-email-creator</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

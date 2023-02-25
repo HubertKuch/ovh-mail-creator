@@ -36,3 +36,6 @@
 1677323495801:get-emails --domain inotomia.pl
 1677323536142:delete-emails --domain inotomia.pl
 1677323837655:get-emails --domain inotomia.pl
+1677323869090:help
+1677323874902:help create-emails
+1677323880845:help create-email
