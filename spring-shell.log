@@ -1,0 +1,28 @@
+1677318267132:create-email
+1677318288459:create-email --count 2 --password test --base test
+1677318303778:create-email
+1677319364685:create-email --domain inotomia.pl --count 1 --passowrd test --base testtest --size 100
+1677319381712:create-email --domain inotomia.pl --count 1 --password test --base testtest --size 100
+1677319401771:create-email --domain inotomia.pl --count 1 --password TEstte24241 --base test --size 100
+1677319447991:create-email --domain inotomia.pl --count 1 --password TEstte24241 --base test
+1677319544246:create-email --domain inotomia.pl --count 1 --password TEstte24241 --base test2 --size 100
+1677320162011:CreateEmailCredentials createEmailCredentials = new CreateEmailCredentials(domain, base, description, password, size);
+1677320200385:craete-email --password TEsdfas2134 --base ratysh --count 3
+1677320209424:create-email --password TEsdfas2134 --base ratysh --count 3
+1677320229913:craete-email --password TEsdfas2134 --base ratysh --count 3 --domain inotomia.pl
+1677320236743:stacktrace
+1677320250065:create-email --password TEsdfas2134 --base ratysh --count 3 --domain inotomia.pl
+1677320474364:test
+1677320516190:create-email --count 1 --base ratysh --passowrd Testspsda2341 --domain inotomia.pl
+1677320525982:create-email --count 1 --base ratysh --password Testspsda2341 --domain inotomia.pl
+1677320740250:test
+1677321065005:create-email --count 1 --base ratysh --password Testspsda2341 --domain inotomia.pl
+1677321072508:create-email --count 4 --base ratysh --password Testspsda2341 --domain inotomia.pl
+1677321081688:create-email --count 1 --base ratysh --password Testspsda2341 --domain inotomia.pl
+1677321086290:create-email --count 10 --base ratysh --password Testspsda2341 --domain inotomia.pl
+1677321161035:test
+1677321631726:create-email --count 1 --base ratysh --password Testspsda2341 --domain inotomia.pl
+1677321643308:test
+1677321753806:create-email --count 1 --base ratysh --password Testspsda2341 --domain inotomia.pl
+1677321981561://
+1677321986953:create-email --count 1 --base ratysh --password Testspsda2341 --domain inotomia.pl

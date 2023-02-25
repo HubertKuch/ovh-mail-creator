@@ -1,9 +1,9 @@
 package com.hubert.ovhmailcreator.models;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public record CreateEmailCredentials(
-        @JsonGetter String domain,
+        @JsonIgnore String domain,
         String accountName,
         String description,
         String password,
