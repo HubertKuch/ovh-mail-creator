@@ -29,7 +29,7 @@ import java.util.List;
             @ShellOption(help = "Description", value = "--description", defaultValue = "") String description,
             @ShellOption(help = "Size in bytes", value = "--size", defaultValue = "100000000") Long size,
             @ShellOption(help = "Random string length", value = "--hash-length", defaultValue = "8") Integer hashLength,
-            @ShellOption(help = "Separator between email base and random hash", value = "--separator", defaultValue = "_") Character separator
+            @ShellOption(help = "Separator between email base and random hash", value = "--separator", defaultValue = "") String separator
     ) throws IOException {
         OvhWrapper ovhWrapper = new OvhWrapper(ovhConfiguration);
         List<EmailCreatedResponse> emails = new ArrayList<>();
