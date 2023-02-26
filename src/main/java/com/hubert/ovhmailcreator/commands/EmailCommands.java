@@ -18,36 +18,47 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
-@ShellComponent
-@RequiredArgsConstructor
-public class EmailCommands {
+@Slf4j @ShellComponent @RequiredArgsConstructor public class EmailCommands {
     private final OvhConfiguration ovhConfiguration;
 
-    @ShellMethod(key = "create-email", value = "Create emails")
-    public String createEmail(
+    @ShellMethod(key = "create-email", value = "Create emails") public String createEmail(
             @ShellOption(help = "OVH domain", value = "--domain") String domain,
             @ShellOption(help = "How many accounts", value = "--count") Integer count,
             @ShellOption(help = "Password for every one", value = "--password") String password,
             @ShellOption(help = "Email base for example `test` and email will be created from `test_{generateValue}`", value = "--base") String base,
             @ShellOption(help = "Description", value = "--description", defaultValue = "") String description,
-            @ShellOption(help = "Size in bytes", value = "--size", defaultValue = "100000000") Long size
+            @ShellOption(help = "Size in bytes", value = "--size", defaultValue = "100000000") Long size,
+            @ShellOption(help = "Random string length", value = "--hash-length", defaultValue = "8") Integer hashLength,
+            @ShellOption(help = "Separator between email base and random hash", value = "--separator", defaultValue = "_") Character separator
     ) throws IOException {
         OvhWrapper ovhWrapper = new OvhWrapper(ovhConfiguration);
         List<EmailCreatedResponse> emails = new ArrayList<>();
         String workingDir = System.getProperty("user.dir");
 
         for (int index = 0; index < count; index++) {
-            String name = base + "_" + Hashing.randomString(10);
-            CreateEmailCredentials createEmailCredentials = new CreateEmailCredentials(domain, name, description, password, size);
+            String name = base + separator + Hashing.randomString(hashLength);
+            CreateEmailCredentials createEmailCredentials = new CreateEmailCredentials(domain,
+                                                                                       name,
+                                                                                       description,
+                                                                                       password,
+                                                                                       size
+            );
             emails.add(ovhWrapper.createEmail(createEmailCredentials));
         }
 
         String pathname = workingDir + "/emails_" + System.currentTimeMillis() + ".txt";
         File file = new File(pathname);
-        file.createNewFile();
+        boolean isCreated = file.createNewFile();
 
-        String fileContent = emails.stream().reduce("", (prev, curr) -> prev + "" + curr.name() + "@" + curr.domain() + "\n", String::concat);
+        if (!isCreated) {
+            log.error("Cannot create emails file");
+            return "";
+        }
+
+        String fileContent = emails.stream().reduce("",
+                                                    (prev, curr) -> prev + "" + curr.name() + "@" + curr.domain() + "\n",
+                                                    String::concat
+        );
 
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true));
 
@@ -58,8 +69,7 @@ public class EmailCommands {
         return "Written into " + pathname;
     }
 
-    @ShellMethod(key = "get-emails", value = "Get emails")
-    public List<String> getEmails(
+    @ShellMethod(key = "get-emails", value = "Get emails") public List<String> getEmails(
             @ShellOption(help = "OVH domain", value = "--domain") String domain
     ) {
         OvhWrapper ovhWrapper = new OvhWrapper(ovhConfiguration);
@@ -67,8 +77,7 @@ public class EmailCommands {
         return ovhWrapper.getEmails(domain);
     }
 
-    @ShellMethod(key = "delete-emails", value = "Delete emails from domain")
-    public void deleteAll(
+    @ShellMethod(key = "delete-emails", value = "Delete emails from domain") public void deleteAll(
             @ShellOption(help = "OVH domain", value = "--domain") String domain
     ) {
         OvhWrapper ovhWrapper = new OvhWrapper(ovhConfiguration);
