@@ -1,25 +1,34 @@
 package com.hubert.ovhmailcreator.randomwords;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import org.springframework.util.ResourceUtils;
 
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @Slf4j
 public class RandomWordsWrapper {
-    private String baseUrl = "https://randomword.com";
 
     public String randomAdjective() {
         try {
-            Document document = Jsoup.connect(baseUrl + "/adjective").get();
+            File file = ResourceUtils.getFile("classpath:adjectives.txt");
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            List<String> lines = new ArrayList<>();
+            String line = reader.readLine();
 
-            return document.getElementById("#random_word").text();
-        } catch (NullPointerException e) {
-            log.error("Cannot read #random_word");
+            while (line != null) {
+                lines.add(line);
+                line = reader.readLine();
+            }
+
+            return lines.get(new Random().nextInt(lines.size()));
+        } catch (FileNotFoundException e) {
+            log.error("Cannot read adjectives. Not Found");
             return "";
         } catch (IOException e) {
-            log.error("Cannot connect to random words api");
+            log.error("Cannot read adjectives. IO Exception");
             return "";
         }
     }
