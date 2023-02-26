@@ -4,6 +4,7 @@ import com.hubert.ovhmailcreator.configuration.OvhConfiguration;
 import com.hubert.ovhmailcreator.models.CreateEmailCredentials;
 import com.hubert.ovhmailcreator.models.EmailCreatedResponse;
 import com.hubert.ovhmailcreator.ovh.OvhWrapper;
+import com.hubert.ovhmailcreator.randomwords.RandomWordsWrapper;
 import com.hubert.ovhmailcreator.utils.Hashing;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,18 +26,25 @@ import java.util.List;
             @ShellOption(help = "OVH domain", value = "--domain") String domain,
             @ShellOption(help = "How many accounts", value = "--count") Integer count,
             @ShellOption(help = "Password for every one", value = "--password") String password,
-            @ShellOption(help = "Email base for example `test` and email will be created from `test_{generateValue}`", value = "--base") String base,
+            @ShellOption(help = "Email base for example `test` and email will be created from `test_{generateValue}`", value = "--base", defaultValue = "") String base,
             @ShellOption(help = "Description", value = "--description", defaultValue = "") String description,
             @ShellOption(help = "Size in bytes", value = "--size", defaultValue = "100000000") Long size,
             @ShellOption(help = "Random string length", value = "--hash-length", defaultValue = "8") Integer hashLength,
-            @ShellOption(help = "Separator between email base and random hash", value = "--separator", defaultValue = "") String separator
+            @ShellOption(help = "Separator between email base and random hash", value = "--separator", defaultValue = "") String separator,
+            @ShellOption(help = "Base will be random word", value = "--random-base-word", defaultValue = "true") boolean isRandomBaseWord
     ) throws IOException {
         OvhWrapper ovhWrapper = new OvhWrapper(ovhConfiguration);
         List<EmailCreatedResponse> emails = new ArrayList<>();
         String workingDir = System.getProperty("user.dir");
+        RandomWordsWrapper randomWordsWrapper = new RandomWordsWrapper();
 
         for (int index = 0; index < count; index++) {
+            if (isRandomBaseWord) {
+                base = randomWordsWrapper.randomAdjective();
+            }
+
             String name = base + separator + Hashing.randomString(hashLength);
+
             CreateEmailCredentials createEmailCredentials = new CreateEmailCredentials(domain,
                                                                                        name,
                                                                                        description,
