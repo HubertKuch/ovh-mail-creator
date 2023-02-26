@@ -19,10 +19,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j @ShellComponent @RequiredArgsConstructor public class EmailCommands {
+@Slf4j
+@ShellComponent
+@RequiredArgsConstructor
+public class EmailCommands {
     private final OvhConfiguration ovhConfiguration;
 
-    @ShellMethod(key = "create-email", value = "Create emails") public String createEmail(
+    @ShellMethod(key = "create-email", value = "Create emails")
+    public String createEmail(
             @ShellOption(help = "OVH domain", value = "--domain") String domain,
             @ShellOption(help = "How many accounts", value = "--count") Integer count,
             @ShellOption(help = "Password for every one", value = "--password") String password,
@@ -46,10 +50,10 @@ import java.util.List;
             String name = base + separator + Hashing.randomString(hashLength);
 
             CreateEmailCredentials createEmailCredentials = new CreateEmailCredentials(domain,
-                                                                                       name,
-                                                                                       description,
-                                                                                       password,
-                                                                                       size
+                    name,
+                    description,
+                    password,
+                    size
             );
             emails.add(ovhWrapper.createEmail(createEmailCredentials));
         }
@@ -63,10 +67,11 @@ import java.util.List;
             return "";
         }
 
-        String fileContent = emails.stream().reduce("",
-                                                    (prev, curr) -> prev + "" + curr.name() + "@" + curr.domain() + "\n",
-                                                    String::concat
-        );
+        String fileContent = emails.stream()
+                                   .reduce("",
+                                           (prev, curr) -> prev + "" + curr.name() + "@" + curr.domain() + "\n",
+                                           String::concat
+                                   );
 
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true));
 
@@ -77,7 +82,8 @@ import java.util.List;
         return "Written into " + pathname;
     }
 
-    @ShellMethod(key = "get-emails", value = "Get emails") public List<String> getEmails(
+    @ShellMethod(key = "get-emails", value = "Get emails")
+    public List<String> getEmails(
             @ShellOption(help = "OVH domain", value = "--domain") String domain
     ) {
         OvhWrapper ovhWrapper = new OvhWrapper(ovhConfiguration);
@@ -85,7 +91,8 @@ import java.util.List;
         return ovhWrapper.getEmails(domain);
     }
 
-    @ShellMethod(key = "delete-emails", value = "Delete emails from domain") public void deleteAll(
+    @ShellMethod(key = "delete-emails", value = "Delete emails from domain")
+    public void deleteAll(
             @ShellOption(help = "OVH domain", value = "--domain") String domain
     ) {
         OvhWrapper ovhWrapper = new OvhWrapper(ovhConfiguration);
