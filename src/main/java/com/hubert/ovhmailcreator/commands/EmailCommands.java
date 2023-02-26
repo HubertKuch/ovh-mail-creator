@@ -1,10 +1,14 @@
 package com.hubert.ovhmailcreator.commands;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.hubert.ovhmailcreator.configuration.OvhConfiguration;
 import com.hubert.ovhmailcreator.models.CreateEmailCredentials;
 import com.hubert.ovhmailcreator.models.EmailCreatedResponse;
+import com.hubert.ovhmailcreator.models.SaveEmailCredentials;
 import com.hubert.ovhmailcreator.ovh.OvhWrapper;
 import com.hubert.ovhmailcreator.randomwords.RandomWordsWrapper;
+import com.hubert.ovhmailcreator.serializers.EmailCreatedSerializer;
 import com.hubert.ovhmailcreator.utils.Hashing;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +20,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -38,7 +41,10 @@ public class EmailCommands {
             @ShellOption(help = "Base will be random word", value = "--random-base-word", defaultValue = "true") boolean isRandomBaseWord
     ) throws IOException {
         OvhWrapper ovhWrapper = new OvhWrapper(ovhConfiguration);
-        List<EmailCreatedResponse> emails = new ArrayList<>();
+        List<EmailCreatedResponse> emails = List.of(new EmailCreatedResponse(24142L, "test", "test", "test.com"),
+                new EmailCreatedResponse(24142L, "test", "test", "test.com"),
+                new EmailCreatedResponse(24142L, "test", "test", "test.com")
+        );
         String workingDir = System.getProperty("user.dir");
         RandomWordsWrapper randomWordsWrapper = new RandomWordsWrapper();
 
@@ -58,22 +64,36 @@ public class EmailCommands {
             emails.add(ovhWrapper.createEmail(createEmailCredentials));
         }
 
-        String pathname = workingDir + "/emails_" + System.currentTimeMillis() + ".txt";
+        String pathname = workingDir + "/emails.json";
         File file = new File(pathname);
-        boolean isCreated = file.createNewFile();
 
-        if (!isCreated) {
-            log.error("Cannot create emails file");
-            return "";
-        }
+                if (file.exists()) {
+                    log.error("File emails.json already exists.");
+                    return "";
+                }
 
-        String fileContent = emails.stream()
-                                   .reduce("",
-                                           (prev, curr) -> prev + "" + curr.name() + "@" + curr.domain() + "\n",
-                                           String::concat
-                                   );
+                boolean isCreated = file.createNewFile();
+
+                if (!isCreated) {
+                    log.error("Cannot create emails file");
+                    return "";
+                }
 
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true));
+        ObjectMapper objectMapper = new ObjectMapper();
+        SimpleModule serializer = new SimpleModule().addSerializer(SaveEmailCredentials.class,
+                new EmailCreatedSerializer(SaveEmailCredentials.class)
+        );
+
+        objectMapper.registerModule(serializer);
+
+        String fileContent = objectMapper.writeValueAsString(emails.stream()
+                                                                   .map(email -> new SaveEmailCredentials(email.id(),
+                                                                           email.name(),
+                                                                           email.action(),
+                                                                           email.domain(),
+                                                                           password
+                                                                   )).toList());
 
         bufferedWriter.append(fileContent);
 

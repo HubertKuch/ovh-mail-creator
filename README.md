@@ -1,10 +1,13 @@
 ## CLI for emails automation on OVH
 
 ### Requirements
+
 Java 17 or higher
 
 ### Build
+
 Linux/MacOS
+
 ```bash
 git clone https://github.com/HubertKuch/ovh-mail-creator.git
 cd ovh-mail-creator
@@ -12,6 +15,7 @@ cd ovh-mail-creator
 ```
 
 Windows
+
 ```bash
 git clone https://github.com/HubertKuch/ovh-mail-creator.git
 cd ovh-mail-creator
@@ -19,6 +23,7 @@ cd ovh-mail-creator
 ```
 
 ### Configuration
+
 ```yaml
 ovh:
   app-secret: <>
@@ -34,6 +39,7 @@ ovh:
 Create X emails on specify domain
 
 ### Options
+
 *`--count` How many emails create <br>
 *`--domain` OVH domain <br>
 *`--password` Password for emails <br>
@@ -48,6 +54,7 @@ Create X emails on specify domain
 Get all emails
 
 ### Options
+
 *`--domain` OVH domain <br>
 </details>
 
@@ -56,5 +63,20 @@ Get all emails
 Delete all emails from domain
 
 ### Options
+
 *`--domain` OVH domain <br>
 </details>
+
+### Generate json sample
+
+```json
+[
+  {
+    "id": 24142,
+    "name": "test",
+    "email": "test@test.com",
+    "domain": "test.com",
+    "password": "test"
+  }
+]
+```
